@@ -62,13 +62,15 @@ void print_list(struct list* tokens, FILE* stream) {
 struct list* parse_line(char* line,  char* delim)
 {
   int first = true;
-  //  struct list* prev = NULL;
   struct list* head = NULL;
+  
   char* part = strtok(line, ":");
+  
   do {
+    
     size_t sz = strlen(part)+1;
     head = list_prepend(list_node(part, sz),head);
+    
   } while((part = strtok(NULL, ":" )) != NULL);
-  list_reverse(head);
-  return head;
+  return list_reverse(head); // correct order
 }

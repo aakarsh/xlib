@@ -9,7 +9,8 @@ struct list* list_node(void* data, size_t sz);
 struct list* list_prepend(struct list* new_head, struct list* head);
 struct list* list_reverse(struct list* head);
 
-struct list* list_node(void* data, size_t sz)
+struct list*
+list_node(void* data, size_t sz)
 {
   struct list* new_head =  malloc(sizeof(struct list));
   new_head->data =  malloc(sz);
@@ -19,27 +20,38 @@ struct list* list_node(void* data, size_t sz)
   return new_head;
 }
 
-struct list* list_prepend(struct list* new_head, struct list* head)
+/**
+ * push new head to head of list.
+ */
+struct list*
+list_prepend(struct list* new_head, struct list* head)
 {
   if(head != NULL) {
-    new_head->next = head;  
+    new_head->next = head;
     head->prev = new_head;
   }
   return new_head;
 }
 
-struct list* list_reverse(struct list* head)
-{
-  struct  list* next = head->next;
-  while(next != NULL) {
-    
-    struct list* save_next = next->next;
-    next->next = next->prev;
-    
-    if(next->prev != NULL) {
-      (next->prev)->prev = next;
-    }
-    
-  }
-}
+/**
+ * Reverse the list in-place
+ */
+struct list*
+list_reverse(struct list* head)
+{  
+  struct  list* prev = NULL;
+  struct  list* cur = head;
 
+  while ( cur != NULL ) {
+    
+    struct list* saved_next = cur->next;
+    struct list* new_next   = cur->prev;
+
+    cur->next = new_next;
+    cur->prev = saved_next;
+    
+    prev = cur;
+    cur = saved_next;    
+  }  
+  return prev;
+}
