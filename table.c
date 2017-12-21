@@ -8,16 +8,15 @@
 #include <stdlib.h>
 
 #include "list.h"
+#include "htable.h"
 
 #define LINE_SIZE 1024
 
 char* trim_char(char* line,char c);
 void print_list(struct list* tokens, FILE* stream);
-
 struct list* parse_line(char* line, char* delim );
 
-
-int  main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
   char* fname = "/etc/passwd";
   FILE* fs = fopen(fname, "r");
@@ -31,13 +30,21 @@ int  main(int argc, char* argv[])
   char* line = malloc(LINE_SIZE);
   size_t size = LINE_SIZE;
   int num = 0;
-  
+
   struct list* lines = malloc(sizeof(struct list));
+  struct htable* table = htable_create(1<<3);
+  
   while((getline(&line,&size,fs))!= -1) {
-    struct list* tokens = parse_line(trim_char(line,'\n'),":");
+    struct list* tokens = parse_line(trim_char(line,'\n'),":");    
+    htable_add(table, tokens->data,tokens->size, tokens);
     print_list(tokens,stdout);
     num++;
-  }  
+  }
+  printf("---------------------------------------------------\n");
+  char* key = "aakarsh";
+  struct list* tokens =  htable_find(table,key,strlen(key)+1);
+  print_list(tokens,stdout);
+  printf("---------------------------------------------------\n");
   return 0;
 }
 
@@ -47,15 +54,18 @@ char* trim_char(char* line,char c) {
   return line;
 }
 
-void print_list(struct list* tokens, FILE* stream) {
+void print_list(struct list* tokens, FILE* stream)
+{
   bool first = true;
-  for(struct list* token = tokens; token != NULL; token = token->next) {
-    if(!first){
-      printf(",");
-    }
+  for(struct list* token = tokens;
+      token != NULL; token = token->next)
+    {
+    if(!first)
+      printf(",");    
     fprintf(stream,"%s",token->data);
+    
     first = false;
-  }
+    }
   printf("\n");
 }
 
@@ -63,14 +73,13 @@ struct list* parse_line(char* line,  char* delim)
 {
   int first = true;
   struct list* head = NULL;
-  
+
   char* part = strtok(line, ":");
-  
   do {
-    
     size_t sz = strlen(part)+1;
     head = list_prepend(list_node(part, sz),head);
-    
+
   } while((part = strtok(NULL, ":" )) != NULL);
+
   return list_reverse(head); // correct order
 }

@@ -1,4 +1,5 @@
-table: table.c list.h
-	gcc -I./. -std=gnu99  table.c -o table
+table: table.c list.h htable.h
+	gcc -g -I./. -std=gnu99  table.c -o table
+	global -u
 	chmod u+x table
-	./table
+
