@@ -20,9 +20,13 @@ list_node(void* data,
           size_t sz)
 {
   struct list* new_head =
-    malloc(sizeof(struct list));
+    calloc(1,sizeof(struct list));
+  
   new_head->data =  malloc(sz);
+  new_head->size = sz;
+  
   memcpy(new_head->data,data,sz);
+  
   new_head->next = NULL;
   new_head->prev = NULL;
   return new_head;

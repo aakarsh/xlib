@@ -32,16 +32,22 @@ int main(int argc, char* argv[])
   int num = 0;
 
   struct list* lines = malloc(sizeof(struct list));
-  struct htable* table = htable_create(1<<3);
-  
+  struct htable* table = htable_create(1<<5);
+
   while((getline(&line,&size,fs))!= -1) {
-    struct list* tokens = parse_line(trim_char(line,'\n'),":");    
-    htable_add(table, tokens->data,tokens->size, tokens);
+    struct list* tokens =
+      parse_line(trim_char(line,'\n'),":");
+    htable_add(table,
+               tokens->data, // key
+               tokens->size, // size
+               tokens,       // pointer-to-tokens
+               sizeof(struct list*));
     print_list(tokens,stdout);
     num++;
   }
+
   printf("---------------------------------------------------\n");
-  char* key = "aakarsh";
+  char* key = "sshd";
   struct list* tokens =  htable_find(table,key,strlen(key)+1);
   print_list(tokens,stdout);
   printf("---------------------------------------------------\n");
@@ -61,9 +67,9 @@ void print_list(struct list* tokens, FILE* stream)
       token != NULL; token = token->next)
     {
     if(!first)
-      printf(",");    
+      printf(",");
     fprintf(stream,"%s",token->data);
-    
+
     first = false;
     }
   printf("\n");
