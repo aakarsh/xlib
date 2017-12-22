@@ -21,14 +21,13 @@ int
 main(int argc, char* argv[])
 {
   char* fname = "/etc/passwd";
-  FILE* fs = fopen(fname, "r");
+  FILE* file = fopen(fname, "r");
 
-  if(!fs) {
+  if(!file) {
     fprintf(stderr, "failed fopen: %s\n",fname);
     perror(NULL);
     return -1;      
   }
-
 
   char* line = malloc(LINE_SIZE);
   size_t size = LINE_SIZE;
@@ -37,7 +36,7 @@ main(int argc, char* argv[])
   struct list* lines = malloc(sizeof(struct list));
   struct htable* table = htable_create(1<<10);
 
-  while((getline(&line,&size,fs))!= -1) {
+  while((getline(&line,&size,file))!= -1) {
     
     struct list* tokens =
       parse_line(trim_char(line,'\n'),":");
@@ -47,6 +46,7 @@ main(int argc, char* argv[])
                tokens->size, // size
                tokens,       // pointer-to-tokens
                sizeof(struct list*));
+    
     print_list(tokens,stdout);
     num++;
   }
