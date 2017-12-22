@@ -17,6 +17,10 @@ void htable_remove(struct htable* t,
                    void* key,
                    size_t key_size);
 
+void
+htable_resize(struct htable* prev_table,
+              size_t new_size);
+
 struct htable_entry {
   void* key;
   size_t key_size;
@@ -31,8 +35,11 @@ struct htable_elem {
 struct htable {
   struct htable_elem** elems;
   size_t size;
+  size_t nelems;
+  double load_factor;  
   unsigned long (*hash_function)(void* key, size_t nbytes);
 };
+
 
 unsigned long
 sdmb_str_hash(void* key,
@@ -50,9 +57,6 @@ sdmb_str_hash(void* key,
   }
   return hash;
 }
-
-
-
            
 void
 htable_add(struct htable* htable,
@@ -79,6 +83,11 @@ htable_add(struct htable* htable,
 
   htable->elems[index]->chain =
     list_prepend(entry_node,htable->elems[index]->chain);
+  htable->nelems++;
+  
+  if(htable->load_factor < (htable->nelems/(1.0 * htable->size))) {
+      htable_resize(htable,htable->size*2);
+  }
 }
 
 struct list*
@@ -140,9 +149,6 @@ htable_find_entry(struct htable* htable,
   return NULL;
 }
 
-
-
-
 void*
 htable_find(struct htable* htable,
             void* key,
@@ -153,27 +159,53 @@ htable_find(struct htable* htable,
 
   if(entry == NULL)
     return NULL;
+  
   return entry;
+}
+
+void
+htable_resize(struct htable* prev_table,
+              size_t new_size)
+{
+  struct htable* t = htable_create(new_size);
+  
+  for(size_t i = 0 ; i < prev_table->size; i++) {
+    struct list* chain = prev_table->elems[i]->chain;
+    while(chain != NULL) {
+      struct htable_entry* e = (struct htable_entry*) chain->data;
+      htable_add(t,e->key,e->key_size, e->data,e->data_size);      
+      chain = chain->next;      
+    }    
+  }
+  
+  // free old table entries
+  for(size_t  i = 0 ; i < prev_table->size; i++) {
+    list_free(&prev_table->elems[i]->chain);
+  }
+  
+  prev_table->elems  = t->elems;
+  prev_table->size   = t->size;
+  prev_table->nelems = t->nelems;
 }
 
 struct htable*
 htable_create(size_t min_size)
 {
   struct htable* t =  malloc(sizeof(struct htable));
-
   t->size  = min_size;
   t->elems = calloc(min_size,sizeof(struct htable_elem));
-
   long n = min_size-1;
   while(n >= 0) {
     t->elems[n] = malloc(sizeof(struct htable_elem));
     t->elems[n]->chain = NULL;
     n--;
   }
-
   t->hash_function = sdmb_str_hash;
+  t->load_factor = .75;
+  
   return t;
 }
+
 
 
 #endif

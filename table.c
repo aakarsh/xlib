@@ -14,9 +14,10 @@
 
 char* trim_char(char* line,char c);
 void print_list(struct list* tokens, FILE* stream);
-struct list* parse_line(char* line, char* delim );
+struct list* parse_line(char* line, char* delim);
 
-int main(int argc, char* argv[])
+int
+main(int argc, char* argv[])
 {
   char* fname = "/etc/passwd";
   FILE* fs = fopen(fname, "r");
@@ -32,12 +33,12 @@ int main(int argc, char* argv[])
   int num = 0;
 
   struct list* lines = malloc(sizeof(struct list));
-  struct htable* table = htable_create(1<<5);
+  struct htable* table = htable_create(1<<10);
 
   while((getline(&line,&size,fs))!= -1) {
     struct list* tokens =
       parse_line(trim_char(line,'\n'),":");
-    htable_add(table,
+    htable_add(table,       // allow new table
                tokens->data, // key
                tokens->size, // size
                tokens,       // pointer-to-tokens
@@ -54,13 +55,15 @@ int main(int argc, char* argv[])
   return 0;
 }
 
-char* trim_char(char* line,char c) {
+char*
+trim_char(char* line,char c) {
   int len = strlen(line)-1;
   while(len > 0 && line[len] == c)  line[len--] = '\0';
   return line;
 }
 
-void print_list(struct list* tokens, FILE* stream)
+void
+print_list(struct list* tokens, FILE* stream)
 {
   bool first = true;
   for(struct list* token = tokens;
@@ -75,7 +78,8 @@ void print_list(struct list* tokens, FILE* stream)
   printf("\n");
 }
 
-struct list* parse_line(char* line,  char* delim)
+struct list*
+parse_line(char* line,  char* delim)
 {
   int first = true;
   struct list* head = NULL;

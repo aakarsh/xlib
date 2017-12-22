@@ -33,7 +33,7 @@ list_node(void* data,
 }
 
 /**
- * push new head to head of list.
+ * Push new head to head of list.
  */
 struct list*
 list_prepend(struct list* new_head,
@@ -47,7 +47,7 @@ list_prepend(struct list* new_head,
 }
 
 /**
- * Reverse the list in-place
+ * Reverse the list in-place.
  */
 struct list*
 list_reverse(struct list* head)
@@ -69,8 +69,9 @@ list_reverse(struct list* head)
   return prev;
 }
 
+
 struct list*
-list_delete(struct list** head,
+list_unlink(struct list** head,
             struct list* node)
 {
   struct list* prev = node->prev;
@@ -87,6 +88,32 @@ list_delete(struct list** head,
   node->next = NULL;
   node->prev = NULL;
   
+  if(*head == node) {
+    *head = NULL;
+  }
+  
   return node;
 }
+
+void list_delete(struct list** head,
+                 struct list* node)
+{
+  struct list* unlinked  = list_unlink(head,node);
+  if(unlinked) {
+    free(unlinked->data);
+    free(node);
+  }
+}
+
+void list_free(struct list** head_ptr)
+{
+  struct list* cur =  *head_ptr ;
+  while(cur != NULL) {
+    struct list* next = cur->next;
+    list_delete(head_ptr,cur);
+    cur = next;
+  }
+  *head_ptr = NULL;
+}
+
 #endif
