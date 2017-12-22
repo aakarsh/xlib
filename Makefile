@@ -1,5 +1,5 @@
-table: table.c list.h htable.h
-	gcc -g  -I./. -std=gnu99  table.c -o bin/table
+xlib: main.c list.h htable.h parse.h
+	gcc -g  -I./. -std=gnu99  main.c -o bin/main
 	global -u
-	chmod u+x bin/table
+	chmod u+x bin/main
 

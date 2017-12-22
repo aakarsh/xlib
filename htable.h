@@ -83,6 +83,7 @@ htable_add(struct htable* htable,
 
   htable->elems[index]->chain =
     list_prepend(entry_node,htable->elems[index]->chain);
+  
   htable->nelems++;
   
   if(htable->load_factor < (htable->nelems/(1.0 * htable->size))) {
@@ -156,10 +157,8 @@ htable_find(struct htable* htable,
 {
   struct htable_entry* entry =
     htable_find_entry(htable,key,key_size);
-
   if(entry == NULL)
-    return NULL;
-  
+    return NULL;  
   return entry;
 }
 
@@ -167,8 +166,7 @@ void
 htable_resize(struct htable* prev_table,
               size_t new_size)
 {
-  struct htable* t = htable_create(new_size);
-  
+  struct htable* t = htable_create(new_size);  
   for(size_t i = 0 ; i < prev_table->size; i++) {
     struct list* chain = prev_table->elems[i]->chain;
     while(chain != NULL) {
@@ -176,13 +174,11 @@ htable_resize(struct htable* prev_table,
       htable_add(t,e->key,e->key_size, e->data,e->data_size);      
       chain = chain->next;      
     }    
-  }
-  
+  }  
   // free old table entries
   for(size_t  i = 0 ; i < prev_table->size; i++) {
     list_free(&prev_table->elems[i]->chain);
   }
-  
   prev_table->elems  = t->elems;
   prev_table->size   = t->size;
   prev_table->nelems = t->nelems;
@@ -201,11 +197,8 @@ htable_create(size_t min_size)
     n--;
   }
   t->hash_function = sdmb_str_hash;
-  t->load_factor = .75;
-  
+  t->load_factor = .75;  
   return t;
 }
-
-
 
 #endif
