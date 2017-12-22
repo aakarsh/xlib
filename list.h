@@ -68,4 +68,25 @@ list_reverse(struct list* head)
   }  
   return prev;
 }
+
+struct list*
+list_delete(struct list** head,
+            struct list* node)
+{
+  struct list* prev = node->prev;
+  struct list* next = node->next;
+
+  if(prev != NULL) {
+    prev->next = next;
+  }
+  
+  if(next !=NULL) {
+    next->prev  = prev;
+  }
+  
+  node->next = NULL;
+  node->prev = NULL;
+  
+  return node;
+}
 #endif

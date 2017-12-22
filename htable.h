@@ -58,64 +58,96 @@ htable_add(struct htable* htable,
 {
   unsigned long hash =
     htable->hash_function(key,key_size);
-  
+
   size_t index =  (hash % htable->size);
-  
+
   struct htable_entry entry =
     {
      .key = key,
      .key_size = key_size,
      .data = data,
      .data_size = data_size
-    };  
-  
+    };
+
   struct list *entry_node =
     list_node(&entry, sizeof(struct htable_entry));
-  
+
   htable->elems[index]->chain =
     list_prepend(entry_node,htable->elems[index]->chain);
 }
+
+struct list*
+htable_find_node(struct htable* htable,
+                 size_t index,
+                 void* key,
+                 size_t key_size)
+{
+  struct list* chain = htable->elems[index]->chain;
+  struct htable_entry* entry = NULL;
+
+  while(chain != NULL) {
+    entry = (struct htable_entry*) chain->data;
+    
+    if(memcmp(entry->key, key,key_size) == 0) {
+      return chain;
+    }
+    chain = chain->next;
+  }
+  return NULL;
+}
+
+struct htable_entry*
+htable_find_entry(struct htable* htable,
+            void* key,
+            size_t key_size)
+{
+  unsigned long hash =
+    htable->hash_function(key,key_size);
+  
+  size_t index =  (hash % htable->size);
+
+  struct list* chain =
+    htable_find_node(htable,index, key,key_size);
+  
+  if(chain != NULL ) {
+    return (struct htable_entry*) chain->data;
+  }
+  return NULL;
+}
+
+
 
 void*
 htable_find(struct htable* htable,
             void* key,
             size_t key_size)
 {
-  unsigned long hash = htable->hash_function(key,key_size);
-  size_t index =  ( hash % htable->size);
-  
-  if(htable->elems[index] != NULL) {
-    struct list* chain = htable->elems[index]->chain;
+  struct htable_entry* entry =
+    htable_find_entry(htable,key,key_size);
 
-    struct htable_entry* entry = NULL;
-    while(chain != NULL) {
-      entry = (struct htable_entry*) chain->data;      
-      if(memcmp(entry->key,key,key_size) == 0) {
-        return entry->data;
-      }      
-      chain = chain->next;
-    }
-  }
-  return NULL;
+  if(entry == NULL)
+    return NULL;
+  return entry;
 }
 
 struct htable*
 htable_create(size_t min_size)
 {
   struct htable* t =  malloc(sizeof(struct htable));
-  
+
   t->size  = min_size;
   t->elems = calloc(min_size,sizeof(struct htable_elem));
-  
+
   long n = min_size-1;
   while(n >= 0) {
     t->elems[n] = malloc(sizeof(struct htable_elem));
-    t->elems[n]->chain = NULL;    
+    t->elems[n]->chain = NULL;
     n--;
   }
-  
+
   t->hash_function = sdmb_str_hash;
   return t;
 }
+
 
 #endif
