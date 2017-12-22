@@ -133,8 +133,8 @@ htable_del(struct htable* htable,
 
 struct htable_entry*
 htable_find_entry(struct htable* htable,
-            void* key,
-            size_t key_size)
+                  void* key,
+                  size_t key_size)
 {
   unsigned long hash =
     htable->hash_function(key,key_size);
@@ -190,12 +190,14 @@ htable_create(size_t min_size)
   struct htable* t =  malloc(sizeof(struct htable));
   t->size  = min_size;
   t->elems = calloc(min_size,sizeof(struct htable_elem));
+  
   long n = min_size-1;
   while(n >= 0) {
     t->elems[n] = malloc(sizeof(struct htable_elem));
     t->elems[n]->chain = NULL;
     n--;
   }
+  
   t->hash_function = sdmb_str_hash;
   t->load_factor = .75;  
   return t;

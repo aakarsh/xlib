@@ -11,7 +11,7 @@
 
 #include "list.h"
 #include "htable.h"
-
+#include "rb_tree.h" 
 #include "parse.h"
 #include "str.h"
 
@@ -33,7 +33,7 @@ main(int argc, char* argv[])
   size_t size = LINE_SIZE;
   int num = 0;
 
-  struct list* lines = malloc(sizeof(struct list));
+  struct list*   lines = malloc(sizeof(struct list));
   struct htable* table = htable_create(1<<10);
 
   while((getline(&line,&size,file))!= -1) {
@@ -41,7 +41,7 @@ main(int argc, char* argv[])
     struct list* tokens =
       parse_line(trim_char(line,'\n'),":");
     
-    htable_add(table,       // allow new table
+    htable_add(table,        // allow new table
                tokens->data, // key
                tokens->size, // size
                tokens,       // pointer-to-tokens

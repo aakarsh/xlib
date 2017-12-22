@@ -7,10 +7,6 @@
 struct list* parse_line(char* line,
                         char* delim);
 
-
-
-
-
 struct list*
 parse_line(char* line,  char* delim)
 {
@@ -25,6 +21,5 @@ parse_line(char* line,  char* delim)
 
   return list_reverse(head); // correct order
 }
-
 
 #endif
