@@ -13,7 +13,9 @@ void* htable_find(struct htable* htable,
                   void* key,
                   size_t key_size);
 
-void htable_remove(void* key, struct htable* t);
+void htable_remove(struct htable* t,
+                   void* key,
+                   size_t key_size);
 
 struct htable_entry {
   void* key;
@@ -49,6 +51,9 @@ sdmb_str_hash(void* key,
   return hash;
 }
 
+
+
+           
 void
 htable_add(struct htable* htable,
            void* key,
@@ -97,6 +102,26 @@ htable_find_node(struct htable* htable,
 }
 
 struct htable_entry*
+htable_del(struct htable* htable,
+           void* key,
+           size_t key_size)
+{
+  unsigned long hash =
+    htable->hash_function(key,key_size);
+  
+  size_t index =  (hash % htable->size);
+  
+  struct list* elem =
+    htable_find_node(htable,index, key,key_size);
+
+  if(elem != NULL ) {
+    list_delete(&(htable->elems[index]->chain), elem);    
+    return (struct htable_entry*) elem->data;    
+  }
+  return NULL;  
+}
+
+struct htable_entry*
 htable_find_entry(struct htable* htable,
             void* key,
             size_t key_size)
@@ -114,6 +139,7 @@ htable_find_entry(struct htable* htable,
   }
   return NULL;
 }
+
 
 
 

@@ -24,7 +24,7 @@ int main(int argc, char* argv[])
   if(!fs) {
     fprintf(stderr, "failed fopen: %s\n",fname);
     perror(NULL);
-    return -1;
+    return -1;      
   }
 
   char* line = malloc(LINE_SIZE);
