@@ -9,8 +9,7 @@ struct list* parse_line(char* line,
 
 struct list*
 parse_line(char* line,  char* delim)
-{
-  int first = true;
+{  
   struct list* head = NULL;
 
   char* part = strtok(line, ":");

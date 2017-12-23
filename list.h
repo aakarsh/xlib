@@ -6,7 +6,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 struct list {
   void* data;
   size_t size;

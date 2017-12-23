@@ -33,7 +33,6 @@ main(int argc, char* argv[])
   char* line = malloc(size);
   int num = 0;
 
-  struct list*   lines = malloc(sizeof(struct list));
   struct htable* table = htable_create(1<<10);
 
   while((getline(&line,&size,file))!= -1) {

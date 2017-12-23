@@ -1,14 +1,20 @@
-libx.so: list.o htable.o
-	gcc -shared -o lib/libx.so list.o htable.o
-
-list.o: list.h list.c
-	gcc -std=gnu99 -g -c -Wall -Werror -fpic list.c
-
-htable.o: htable.h htable.c
-	gcc -std=gnu99 -g -c -Wall -Werror -fpic htable.c
+CFLAGS=-g -std=gnu99  -Wall -Werror
+INCLUDE_FLAGS= -I. -Igen/
+LIB_FLAGS=-L./lib
 
 main: main.c parse.h libx.so
-	gcc -L./lib -g -I./. -std=gnu99  main.c -o bin/main -lx
+	gcc $(LIB_FLAGS) $(INCLUDE_FLAGS) $(CFLAGS)  main.c -o bin/main -lx
 	global -u
 	chmod u+x bin/main
+
+libx.so: obj/list.o obj/htable.o
+	gcc -shared -o lib/libx.so obj/*
+
+obj/list.o: list.h list.c
+	gcc $(CFLAGS) -c -fpic list.c -o obj/list.o
+
+obj/htable.o: htable.h htable.c
+	gcc $(CFLAGS) -c -fpic htable.c -o obj/htable.o
+
+
 
