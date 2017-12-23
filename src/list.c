@@ -104,7 +104,6 @@ void list_free(struct list** head_ptr)
   *head_ptr = NULL;
 }
 
-
 void
 print_list(struct list* tokens,
            FILE* stream)

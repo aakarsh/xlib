@@ -3,9 +3,7 @@
 
 #include "list.h"
 
-
 struct list* parse_line(char* line,
                         char* delim);
-
 
 #endif
