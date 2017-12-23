@@ -124,9 +124,8 @@ rb_color(struct rb_node* rb)
  *   violation only happens :
  *   1. if z is root, color[z] = red | change color to black
  *   2. if z, p[z] are red
+ *
  */
- 
-
   
 #endif
 

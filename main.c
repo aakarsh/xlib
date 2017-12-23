@@ -22,12 +22,13 @@ main(int argc, char* argv[])
 {
   char* fname = "/etc/passwd";
   FILE* file  = fopen(fname, "r");
-
+  
   if(!file) {
     fprintf(stderr, "failed fopen: %s\n",fname);
     perror(NULL);
     return -1;      
   }
+  
   size_t size = LINE_SIZE;
   char* line = malloc(size);
   int num = 0;
