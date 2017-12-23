@@ -8,9 +8,16 @@ struct list {
   struct list* prev;
 };
 
-struct list* list_node(void* data, size_t sz);
-struct list* list_prepend(struct list* new_head, struct list* head);
-struct list* list_reverse(struct list* head);
+struct list*
+list_node(void* data,
+          size_t sz);
+
+struct list*
+list_prepend(struct list* new_head,
+             struct list* head);
+
+struct list*
+list_reverse(struct list* head);
 
 /**
  * Creates new list node.
@@ -95,7 +102,8 @@ list_unlink(struct list** head,
   return node;
 }
 
-void list_delete(struct list** head,
+void
+list_delete(struct list** head,
                  struct list* node)
 {
   struct list* unlinked  = list_unlink(head,node);
@@ -105,7 +113,8 @@ void list_delete(struct list** head,
   }
 }
 
-void list_free(struct list** head_ptr)
+void
+list_free(struct list** head_ptr)
 {
   struct list* cur =  *head_ptr ;
   while(cur != NULL) {

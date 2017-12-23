@@ -9,17 +9,22 @@ static bool htable_debug = false;
 
 struct htable*  htable_create(size_t min_size);
 
-void* htable_find(struct htable* htable,
-                  void* key,
-                  size_t key_size);
+void*
+htable_find(struct htable* htable,
+            void* key,
+            size_t key_size);
 
-void htable_remove(struct htable* t,
-                   void* key,
-                   size_t key_size);
+void
+htable_remove(struct htable* t,
+              void* key,
+              size_t key_size);
 
 void
 htable_resize(struct htable* prev_table,
               size_t new_size);
+
+void
+htable_free_entries(struct htable* htable);
 
 struct htable_entry {
   void* key;
@@ -175,13 +180,29 @@ htable_resize(struct htable* prev_table,
       chain = chain->next;      
     }    
   }  
-  // free old table entries
-  for(size_t  i = 0 ; i < prev_table->size; i++) {
-    list_free(&prev_table->elems[i]->chain);
-  }
+  
+  htable_free_entries(prev_table);
+  
   prev_table->elems  = t->elems;
   prev_table->size   = t->size;
   prev_table->nelems = t->nelems;
+}
+
+void
+htable_free_entries(struct htable* htable)
+{
+  // free old table entries
+  for(size_t  i = 0 ; i < htable->size; i++) {
+    list_free(&htable->elems[i]->chain);
+    free(htable->elems[i]);
+  }
+}
+
+void
+htable_free(struct htable* htable)
+{
+  htable_free_entries(htable);
+  free(htable);
 }
 
 struct htable*

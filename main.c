@@ -21,16 +21,15 @@ int
 main(int argc, char* argv[])
 {
   char* fname = "/etc/passwd";
-  FILE* file = fopen(fname, "r");
+  FILE* file  = fopen(fname, "r");
 
   if(!file) {
     fprintf(stderr, "failed fopen: %s\n",fname);
     perror(NULL);
     return -1;      
   }
-
-  char* line = malloc(LINE_SIZE);
   size_t size = LINE_SIZE;
+  char* line = malloc(size);
   int num = 0;
 
   struct list*   lines = malloc(sizeof(struct list));
@@ -53,7 +52,7 @@ main(int argc, char* argv[])
 
   printf("---------------------------------------------------\n");
   char* key = "sshd";
-  struct list* tokens =  htable_find(table,key,strlen(key)+1);
+  struct list* tokens = htable_find(table,key,strlen(key)+1);
   print_list(tokens,stdout);
   printf("---------------------------------------------------\n");
   return 0;
