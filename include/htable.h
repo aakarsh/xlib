@@ -23,8 +23,7 @@ struct htable {
   double load_factor;
   
   unsigned long (*hash_function)(void* key,
-                                 size_t nbytes);
-  
+                                 size_t nbytes);  
 };
 
 struct htable*

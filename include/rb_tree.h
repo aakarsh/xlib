@@ -69,13 +69,11 @@
  * All paths from a node down to a descendent will have same number of
  * black nodes.
  */
-
 enum rb_color { black, red };
 
 struct rb_node
 {
-  enum rb_color color:1;
-
+  enum   rb_color color:1;
   struct rb_node* parent;
   struct rb_node* left;
   struct rb_node* right;
@@ -121,11 +119,11 @@ rb_color(struct rb_node* rb)
  *   2. if p[z] == root | color[p[z]] = red
  *   3. There is at-most one violation of heap property.
  *
- *   violation only happens :
- *   1. if z is root, color[z] = red | change color to black
- *   2. if z, p[z] are red
- *
+ *   Violation only happens :
+ *     1. if z is root, color[z] = red | change color to black
+ *     2. if z, p[z] are red
  */
-  
+
+
 #endif
 
