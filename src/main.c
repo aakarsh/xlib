@@ -36,16 +36,22 @@ main(int argc, char* argv[])
 
   struct htable* table = htable_create(1<<10);
 
+  struct heap* h = heap_create(100,heap_str_cmp);
+  
   while((getline(&line,&size,file))!= -1) {
     
-    struct list* tokens =
-      parse_line(trim_char(line,'\n'),":");
+    char* trim_line = trim_char(line,'\n');
+    heap_insert(h, trim_line, size, line, size);
+    
+    struct list* tokens = parse_line(trim_line,":");
     
     htable_add(table,        // allow new table
                tokens->data, // key
                tokens->size, // size
                tokens,       // pointer-to-tokens
                sizeof(struct list*));
+    
+
     
     print_list(tokens,stdout);
     num++;
@@ -56,5 +62,14 @@ main(int argc, char* argv[])
   struct list* tokens = htable_find(table,key,strlen(key)+1);
   print_list(tokens,stdout);
   printf("---------------------------------------------------\n");
+  
+  int i;
+  struct heap_element** elements = heap_sort(h,&i);
+  while( i > 0) {
+    struct heap_element* e = *(elements+i);
+    printf("%3d: %s\n", i,(char*) e->data.mem);
+    i--; 
+  }
+  
   return 0;
 }

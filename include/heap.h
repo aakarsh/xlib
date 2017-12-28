@@ -24,8 +24,13 @@ struct heap {
   int (*cmp) (void* k1, void* k2, size_t n); 
 };
 
+int
+heap_str_cmp(void* k1,
+             void* k2,
+             size_t n);
+
 struct heap*
-heap_init(int capacity,
+heap_create(int capacity,
           int (*cmp)(void* k1,void* k2, size_t n));
 
 void
@@ -49,6 +54,7 @@ heap_max(struct heap* heap);
 * sorted order.
 */
 struct heap_element**
-heap_sorted(struct heap* heap);
+heap_sort(struct heap* heap,
+          int *n);
 
 #endif
