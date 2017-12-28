@@ -14,6 +14,7 @@
 #include "rb_tree.h" 
 #include "parse.h"
 #include "str.h"
+#include "heap.h"
 
 #define LINE_SIZE 1024
 

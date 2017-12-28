@@ -70,7 +70,7 @@
  * black nodes.
  */
 enum rb_color  { black, red };
-enum rb_branch { left, right};
+enum rb_branch { rb_left, rb_right};
 
 struct rb_key {
   void* key;
@@ -110,9 +110,9 @@ rb_get_child(struct rb_node* node,
   if(node == NULL)
     return NULL;
   switch(branch) {
-  case left:
+  case rb_left:
     return node->left;
-  case right:
+  case rb_right:
     return node->right;
   default:
     return NULL;
@@ -124,9 +124,9 @@ rb_get_child_ref(struct rb_node* node,
                  enum rb_branch branch)
 {
   switch(branch) {
-  case left:
+  case rb_left:
     return &(node->left);
-  case right:
+  case rb_right:
     return &(node->right);
   default:
     return NULL;
@@ -151,7 +151,7 @@ rb_set_child(struct rb_node** root,
 enum rb_branch
 rb_child_type(struct rb_node* node)
 {
-  return (rb_get_child(node->parent,left) == node) ? left : right;
+  return (rb_get_child(node->parent,rb_left) == node) ? rb_left : rb_right;
 }
 
 void
@@ -161,7 +161,7 @@ rb_move_child(struct rb_node* demoted,
 {
 
   switch(branch_type) {
-  case left:
+  case rb_left:
     // child moves from:
     // promoted-left to demoted-right
     demoted->right = promoted->left;
@@ -169,7 +169,7 @@ rb_move_child(struct rb_node* demoted,
       (promoted->left)->parent = demoted;
     }
     break;
-  case right:
+  case rb_right:
     // child moves from:
     // promoted-right to demoted-left
     demoted->left = promoted->right;
@@ -228,23 +228,42 @@ void
 rb_left_rotate(struct rb_node** root,
                struct rb_node* demote)
 {
-  rb_rotate(root, demote, left);
+  rb_rotate(root, demote, rb_left);
 }
 
 void
 rb_right_rotate(struct rb_node** root,
                 struct rb_node* demote)
 {
-  rb_rotate(root, demote, right);
+  rb_rotate(root, demote, rb_right);
 }
 
+
+/**
+ * rb_insert_fixup :
+ *
+ * Restores the r-b properties of
+ * the tree after a new node has been
+ * inserted into it.
+ *
+ * Needs
+ */
 void
-rb_fixup(struct rb_node** root,
-          struct rb_node*  new)
-{
- //
-}
+rb_insert_fixup(struct rb_node** root,
+                struct rb_node*  z)
+{  
+  /**
+   * Invariants:
+   *
+   *  1. New node z is always red.
+   *  2. if z->parent is root then z->parent is black.
+   *  3. There is at most one violation of rb property:
+   *     3.1 z is root and is red.
+   *     3.2 z and z->parent are red.
+   */
   
+}
+
 void
 rb_insert(struct rb_node** root,
           struct rb_node*  new,
@@ -254,13 +273,13 @@ rb_insert(struct rb_node** root,
   new->color = red;
   new->left  = NULL;
   new->right = NULL;
-  
+
   struct rb_node* parent = NULL; // find-parent a
   struct rb_node* cur = *root;
-  
+
   while ( cur != NULL ) {
     parent = cur;
-    
+
     // new is smaller
     if( key_compare(&(new->key), &(cur->key)) < 0) {
       cur = cur->left;
@@ -268,7 +287,6 @@ rb_insert(struct rb_node** root,
       cur = cur->right;
     }
   }
-
   new->parent = parent;
   if(parent == NULL) { // new node is root
     *root = new;
@@ -279,10 +297,8 @@ rb_insert(struct rb_node** root,
       parent->right = new;
     }
   }
-  
-  rb_fixup(root,new);  
+  rb_insert_fixup(root,new);
 }
-
 
 /**
  * Insertion:
@@ -309,9 +325,7 @@ rb_insert(struct rb_node** root,
  *   Violation only happens :
  *     1. if z is root, color[z] = red | change color to black
  *     2. if z, p[z] are red
- *
  */
-
 
 
 #endif
