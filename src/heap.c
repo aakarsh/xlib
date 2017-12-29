@@ -23,7 +23,7 @@ heap_int_cmp(void* k1,
 {
   const int* s1 = (const int*) k1;
   const int* s2 = (const int*) k2;  
-  return -1*( *s1 - *s2);
+  return ( *s1 - *s2);
 }
 
 int
@@ -51,7 +51,7 @@ heap_create(int capacity,
   heap->elements = elements;
   heap->capacity = capacity;
   heap->size = 1;
-  heap->type = HEAP_MIN;
+  heap->type = HEAP_MAX;
   heap->cmp = cmp;
 
   return heap;
@@ -105,8 +105,8 @@ heap_pick_larger(struct heap* heap,
   struct heap_ptr x_key = x->key;
   struct heap_ptr y_key = y->key;
   
-  return heap->cmp(x_key.mem, y_key.mem,
-                   min(x_key.size,y_key.size)) >= 0 ? i : j;
+  return (heap->type * heap->cmp(x_key.mem, y_key.mem,
+                                 min(x_key.size,y_key.size))) >= 0 ? i : j;
 }
 
 /**

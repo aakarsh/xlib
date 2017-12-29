@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <assert.h>
 
-enum heap_type { HEAP_MIN,
-                 HEAP_MAX };
+enum heap_type { HEAP_MIN = -1,
+                 HEAP_MAX = 1 };
 
 struct heap_ptr {
   void* mem;
