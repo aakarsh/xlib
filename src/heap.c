@@ -97,7 +97,6 @@ heap_pick_larger(struct heap* heap,
 
   if(j >= heap->size)
     return i;
-
   
   struct heap_element* x = heap_elem(heap, i);
   struct heap_element* y = heap_elem(heap, j);
@@ -135,7 +134,7 @@ heap_heapify(struct heap* heap, size_t i)
 void
 heap_build(struct heap* heap)
 {
-  int i = round(heap->size/2);
+  int i = heap->size >> 1;
   while(i > 0)
     heap_heapify(heap,i--);
 }
