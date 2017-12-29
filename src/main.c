@@ -38,10 +38,15 @@ main(int argc, char* argv[])
 
   struct heap* h = heap_create(100,heap_str_cmp);
   
+  // struct heap* h = heap_create(100,heap_int_cmp);
+  
+  int line_num = 0;
   while((getline(&line,&size,file))!= -1) {
     
     char* trim_line = trim_char(line,'\n');
-    heap_insert(h, trim_line, size, line, size);
+    
+    heap_insert(h, line, size, trim_line, size);
+    // heap_insert(h, &line_num, sizeof(int), trim_line, size);
     
     struct list* tokens = parse_line(trim_line,":");
     
@@ -50,7 +55,7 @@ main(int argc, char* argv[])
                tokens->size, // size
                tokens,       // pointer-to-tokens
                sizeof(struct list*));
-    
+    line_num++;
 
     
     print_list(tokens,stdout);
@@ -63,12 +68,14 @@ main(int argc, char* argv[])
   print_list(tokens,stdout);
   printf("---------------------------------------------------\n");
   
-  int i;
-  struct heap_element** elements = heap_sort(h,&i);
-  while( i > 0) {
-    struct heap_element* e = *(elements+i);
-    printf("%3d: %s\n", i,(char*) e->data.mem);
-    i--; 
+  int n;
+  struct heap_element ** elements  =   heap_sort(h,&n);
+  int i = 0;
+  while( i < n) {
+    struct heap_element* e = *(elements++);// heap_elem(h,i);
+    printf("%s\n", ((char*) e->key.mem));
+    // printf("%d : %s\n", *((int*) e->key.mem), (char*) (e->data.mem));
+    i++; 
   }
   
   return 0;

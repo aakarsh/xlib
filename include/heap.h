@@ -2,6 +2,7 @@
 #define HEAP_H
 
 #include <stdlib.h>
+#include <assert.h>
 
 enum heap_type { HEAP_MIN,
                  HEAP_MAX };
@@ -24,6 +25,20 @@ struct heap {
   int (*cmp) (void* k1, void* k2, size_t n); 
 };
 
+
+struct heap_element*
+heap_elem(struct heap* heap,
+          int i)
+{
+  assert(i < heap->size);
+  return *(heap->elements + i);
+}
+
+int
+heap_int_cmp(void* k1,
+             void* k2,
+             size_t n);
+  
 int
 heap_str_cmp(void* k1,
              void* k2,
