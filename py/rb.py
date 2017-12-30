@@ -16,9 +16,10 @@ red-black properties
 class rb_tree:
 
     def __init__(self):
-        self.left  = None
-        self.right = None
-        self.color = None
+        self.left    = None
+        self.parent  = None
+        self.right   = None
+        self.color   = None
 
     def __rotate__(self, left, right):
         pass
