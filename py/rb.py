@@ -15,7 +15,8 @@ Red/Black Properties:
 class rb_tree:
 
     def __init__(self):
-        self.value   = "";
+        self.key     = ""
+        self.value   = {};
         self.left    = None
         self.parent  = None
         self.right   = None
@@ -25,7 +26,7 @@ class rb_tree:
         def node_str(node,depth,dir):
             retval  = ("*" * depth) + " "
             retval  += "(" + dir+ ":"+ node.color +")"
-            retval  += "["+str(node.value)+"]"
+            retval  += "["+str(node.key)+"]"
             retval  +=  "\n"
             if node.left != None:
                 retval += node_str(node.left,depth+1,"l")
@@ -33,6 +34,17 @@ class rb_tree:
                 retval += node_str(node.right,depth+1,"r")
             return retval
         return node_str(self, 1, "-")
+
+    def search(self,key):
+        cur = self
+        while cur != None:
+            if cur.key == key:
+                return cur
+            elif cur.key > key:
+                cur = cur.left
+            elif cur.key < key:
+                cur = cur.right
+        return None;
 
     @classmethod
     def parse(self,s):
@@ -42,7 +54,6 @@ class rb_tree:
         cur = None
         root = None
         parent = None
-
         while pos < len(s):
             c = s[pos]
             pos += 1
@@ -66,22 +77,34 @@ class rb_tree:
                         raise ValueError("node already has two children")
                     cur = child
             elif c == ')':
-                cur.value = int(cur.value)
+                cur.key = int(cur.key)
                 cur = stack.pop()
             else:
-                cur.value += c
+                cur.key += c
         return root
-
-    def search(self,value):
-        cur = self
-        while cur != None:
-            if cur.value == value:
-                return cur
-            elif cur.value > value:
-                cur = cur.left
-            elif cur.value < value:
-                cur = cur.right
-        return None;
+    
+    def insert(self, key, value = None):
+        z = rb_tree()
+        z.key = key
+        z.value = value
+        z.color = "red"
+        z.left = None
+        z.right = None
+        y = self
+        x = self
+        
+        while x != None:
+            y = x
+            if key < x.key:
+                x = x.left
+            else:
+                x = x.right
+        if key < y.key:
+            y.left = z
+        else:
+            y.right = z
+        z.parent = y
+        self.fix_up(z)
 
     def __rotate__(self, left, right):
         pass
@@ -98,12 +121,12 @@ class rb_tree:
     def pred(self,key):
         pass
 
-    def insert(self,key,data):
+    def fix_up(self,z):
         pass
 
     def delete(self,key):
         pass
-
+    
 if __name__ == "__main__":
     print("rb:start")
     rb = rb_tree()
