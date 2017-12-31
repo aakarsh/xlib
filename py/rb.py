@@ -1,8 +1,6 @@
 #!/usr/bin/python
-
 # Eric Demaine : Balanced Search Trees
 # https://www.youtube.com/watch?v=O3hI9FdxFOM
-
 """
 Red Black Tree:
 Red/Black Properties:
@@ -12,28 +10,50 @@ Red/Black Properties:
 4. 2* length(path[x->leaf(x)] ! filter color == black) <= path-length[x->leaf(x)]
 5. black-height[nil] == 1
 """
-class rb_tree:
 
+class rb_node:
+    
     def __init__(self):
         self.key     = ""
         self.value   = {};
         self.left    = None
         self.parent  = None
         self.right   = None
-        self.color   = "."
+        self.color   = "red"
+
+    def __init__(self, key = "", value = {},parent=None):
+        self.key     = key
+        self.value   = value
+        self.left    = None
+        self.parent  = parent
+        self.right   = None
+        self.color   = "red"
 
     def __repr__(self):
-        def node_str(node,depth,dir):
+        def node_string(node):
+            retval =""
+            retval  += "("
+            retval  += str(node.key)
+            if node.left != None:
+                retval += " "+node_string(node.left)
+            if node.right != None:
+                retval += " "+node_string(node.right)
+            retval +=" )"
+            return retval
+        return node_string(self)
+    
+    def __str__(self):
+        def node_string(node,depth,dir):
             retval  = ("*" * depth) + " "
             retval  += "(" + dir+ ":"+ node.color +")"
             retval  += "["+str(node.key)+"]"
             retval  +=  "\n"
             if node.left != None:
-                retval += node_str(node.left,depth+1,"l")
+                retval += node_string(node.left,depth+1,"l")
             if node.right != None:
-                retval += node_str(node.right,depth+1,"r")
+                retval += node_string(node.right,depth+1,"r")
             return retval
-        return node_str(self, 1, "-")
+        return node_string(self, 1, "-")
 
     def search(self,key):
         cur = self
@@ -49,8 +69,9 @@ class rb_tree:
     @classmethod
     def parse(self,s):
         pos = 0
-        stack = []        
-        while pos < len(s) and s[pos]!= '(': pos += 1
+        stack = []
+        while pos < len(s) and s[pos]!= '(':
+            pos += 1
         cur = None
         root = None
         parent = None
@@ -61,13 +82,13 @@ class rb_tree:
                 continue
             elif c == '(': # push current node, into stack keep parsing
                 if root == None:
-                    root = rb_tree()
+                    root = rb_node()
                     cur  = root
                     stack.append(cur)
                     parent = cur
                 else:
                     stack.append(cur)
-                    child = rb_tree()
+                    child = rb_node()
                     child.parent = cur
                     if cur.left == None:
                         cur.left = child
@@ -82,17 +103,12 @@ class rb_tree:
             else:
                 cur.key += c
         return root
-    
-    def insert(self, key, value = None):
-        z = rb_tree()
-        z.key = key
-        z.value = value
-        z.color = "red"
-        z.left = None
-        z.right = None
+
+    def insert(self, key, value=None):
+        # Create :- *rb-tree node*
+        z = rb_node(key,value)
         y = self
         x = self
-        
         while x != None:
             y = x
             if key < x.key:
@@ -105,7 +121,6 @@ class rb_tree:
             y.right = z
         z.parent = y
         self.fix_up(z)
-
 
     def __rotate__(self, left, right):
         pass
@@ -127,8 +142,19 @@ class rb_tree:
 
     def delete(self,key):
         pass
+
+class rb_test():
     
+    def __init__(self):
+        self.tree = rb_node.parse("(2 (1) (3)")
+        assert self.tree != None
+
+    def all(self):        
+        print("ran tests!")
+        pass
+    
+rb_test().all()
 if __name__ == "__main__":
     print("rb:start")
-    rb = rb_tree()
+    rb_test().all()
     print("rb:end")
