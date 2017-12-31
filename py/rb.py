@@ -4,9 +4,8 @@
 # https://www.youtube.com/watch?v=O3hI9FdxFOM
 
 """
-red-black tree
-1. binery search trees
-red-black properties
+Red Black Tree:
+Red/Black Properties:
 1. node-color: { red , black}
 2. node-color(nil): black
 3. color[parent[black-node]] == black
@@ -14,13 +13,13 @@ red-black properties
 5. black-height[nil] == 1
 """
 class rb_tree:
-
+    
     def __init__(self):
         self.value   = "";
         self.left    = None
         self.parent  = None
         self.right   = None
-        self.color   = None
+        self.color   = "."
 
     def __rotate__(self, left, right):
         pass
@@ -48,8 +47,8 @@ class rb_tree:
 
     def __repr__(self):
         def node_str(node,depth,dir):
-            retval  = "*" * depth
-            retval  += "(" + dir +")"
+            retval  = ("*" * depth) + " "
+            retval  += "(" + dir+ ":"+ node.color +")"
             retval  += "["+str(node.value)+"]"
             retval  +=  "\n"
             if node.left != None:
@@ -57,7 +56,7 @@ class rb_tree:
             if node.right != None:
                 retval += node_str(node.right,depth+1,"r")
             return retval
-        return node_str(self, 0, "-")
+        return node_str(self, 1, "-")
 
     @classmethod
     def parse(self,s):
@@ -73,7 +72,6 @@ class rb_tree:
             if c == ' ':
                 continue
             elif c == '(': # push current node, into stack keep parsing
-                print ("push")
                 if root == None:
                     root = rb_tree()
                     cur  = root
