@@ -12,7 +12,7 @@ Red/Black Properties:
 4. 2* length(path[x->leaf(x)] ! filter color == black) <= path-length[x->leaf(x)]
 5. black-height[nil] == 1
 """
-class rb_tree:    
+class rb_tree:
 
     def __init__(self):
         self.value   = "";
@@ -37,11 +37,12 @@ class rb_tree:
     @classmethod
     def parse(self,s):
         pos = 0
-        stack = []
-        while pos < len(s) and s[pos]!= '(':
-            pos += 1
+        stack = []        
+        while pos < len(s) and s[pos]!= '(': pos += 1
         cur = None
         root = None
+        parent = None
+
         while pos < len(s):
             c = s[pos]
             pos += 1
@@ -52,9 +53,11 @@ class rb_tree:
                     root = rb_tree()
                     cur  = root
                     stack.append(cur)
+                    parent = cur
                 else:
                     stack.append(cur)
                     child = rb_tree()
+                    child.parent = cur
                     if cur.left == None:
                         cur.left = child
                     elif cur.right == None:
@@ -77,7 +80,7 @@ class rb_tree:
             elif cur.value > value:
                 cur = cur.left
             elif cur.value < value:
-                cur = cur.right        
+                cur = cur.right
         return None;
 
     def __rotate__(self, left, right):
@@ -88,7 +91,6 @@ class rb_tree:
 
     def __rotate_left__(self, left, right):
         pass
-           
 
     def succ(self,key):
         pass
