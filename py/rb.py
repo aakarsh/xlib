@@ -106,6 +106,7 @@ class rb_tree:
         z.parent = y
         self.fix_up(z)
 
+
     def __rotate__(self, left, right):
         pass
 
