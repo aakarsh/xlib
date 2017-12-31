@@ -9,8 +9,7 @@ Red/Black Properties:
 3. color[parent[black-node]] == black
 4. 2* length(path[x->leaf(x)] ! filter color == black) <= path-length[x->leaf(x)]
 5. black-height[nil] == 1
-"""
-
+"""        
 class rb_node:
     
     def __init__(self):
@@ -143,8 +142,22 @@ class rb_node:
     def delete(self,key):
         pass
 
-class rb_test():
+class rb_tree:
+    def __init__(self, root = None):
+        self.root = root
+
+    @classmethod
+    def parse(s):
+        return rb_tree(root = rb_node.parse(s))
     
+    def insert(self,key,value):
+        if self.root == None:
+            self.root = rb_node(ke,value)
+            self.root.color = "black"
+        else:
+            self.root.insert(key,value)
+
+class rb_test():    
     def __init__(self):
         self.tree = rb_node.parse("(2 (1) (3)")
         assert self.tree != None
