@@ -2,10 +2,10 @@
 
 # Eric Demaine : Balanced Search Trees
 # https://www.youtube.com/watch?v=O3hI9FdxFOM
+
 """
 red-black tree
 1. binery search trees
-
 red-black properties
 1. node-color: { red , black}
 2. node-color(nil): black
@@ -16,6 +16,7 @@ red-black properties
 class rb_tree:
 
     def __init__(self):
+        self.value   = "";
         self.left    = None
         self.parent  = None
         self.right   = None
@@ -27,9 +28,9 @@ class rb_tree:
     def __rotate_right__(self, left, right):
         pass
 
-    def __rotate_left(self, left, right):
+    def __rotate_left__(self, left, right):
         pass
-    
+
     def search(self):
         pass
 
@@ -44,6 +45,56 @@ class rb_tree:
 
     def delete(self,key):
         pass
+
+    def __repr__(self):
+        def node_str(node,depth,dir):
+            retval  = "*" * depth
+            retval  += "(" + dir +")"
+            retval  += "["+str(node.value)+"]"
+            retval  +=  "\n"
+            if node.left != None:
+                retval += node_str(node.left,depth+1,"l")
+            if node.right != None:
+                retval += node_str(node.right,depth+1,"r")
+            return retval
+        return node_str(self, 0, "-")
+
+    @classmethod
+    def parse(self,s):
+        pos = 0
+        stack = []
+        while pos < len(s) and s[pos]!= '(':
+            pos += 1
+        cur = None
+        root = None
+        while pos < len(s):
+            c = s[pos]
+            pos += 1
+            if c == ' ':
+                continue
+            elif c == '(': # push current node, into stack keep parsing
+                print ("push")
+                if root == None:
+                    root = rb_tree()
+                    cur  = root
+                    stack.append(cur)
+                else:
+                    stack.append(cur)
+                    child = rb_tree()
+                    if cur.left == None:
+                        cur.left = child
+                    elif cur.right == None:
+                        cur.right = child
+                    else:
+                        raise ValueError("node already has two children")
+                    cur = child
+            elif c == ')':
+                value = ""
+                cur = stack.pop()
+            else:
+                cur.value += c
+        return root
+
 
 if __name__ == "__main__":
     print("rb:start")
