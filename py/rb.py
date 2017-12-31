@@ -12,38 +12,14 @@ Red/Black Properties:
 4. 2* length(path[x->leaf(x)] ! filter color == black) <= path-length[x->leaf(x)]
 5. black-height[nil] == 1
 """
-class rb_tree:
-    
+class rb_tree:    
+
     def __init__(self):
         self.value   = "";
         self.left    = None
         self.parent  = None
         self.right   = None
         self.color   = "."
-
-    def __rotate__(self, left, right):
-        pass
-
-    def __rotate_right__(self, left, right):
-        pass
-
-    def __rotate_left__(self, left, right):
-        pass
-
-    def search(self):
-        pass
-
-    def succ(self,key):
-        pass
-
-    def pred(self,key):
-        pass
-
-    def insert(self,key,data):
-        pass
-
-    def delete(self,key):
-        pass
 
     def __repr__(self):
         def node_str(node,depth,dir):
@@ -87,12 +63,44 @@ class rb_tree:
                         raise ValueError("node already has two children")
                     cur = child
             elif c == ')':
-                value = ""
+                cur.value = int(cur.value)
                 cur = stack.pop()
             else:
                 cur.value += c
         return root
 
+    def search(self,value):
+        cur = self
+        while cur != None:
+            if cur.value == value:
+                return cur
+            elif cur.value > value:
+                cur = cur.left
+            elif cur.value < value:
+                cur = cur.right        
+        return None;
+
+    def __rotate__(self, left, right):
+        pass
+
+    def __rotate_right__(self, left, right):
+        pass
+
+    def __rotate_left__(self, left, right):
+        pass
+           
+
+    def succ(self,key):
+        pass
+
+    def pred(self,key):
+        pass
+
+    def insert(self,key,data):
+        pass
+
+    def delete(self,key):
+        pass
 
 if __name__ == "__main__":
     print("rb:start")
